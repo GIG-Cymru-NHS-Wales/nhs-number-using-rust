@@ -1,0 +1,16 @@
+[package]
+name = "nhs-number"
+version = "0.1.0"
+edition = "2024"
+authors = ["Joel Parker Henderson <joel.henderson@wales.nhs.uk>"]
+description = "National Health Service (NHS) number for NHS Wales, NHS England, NHS Isle of Man."
+license = "MIT OR Apache-2.0 OR GPL-2.0 OR GPL-3.0 OR BSD-3-Clause"
+repository = "https://github.com/GIG-Cymru-NHS-Wales/nhs-number-rust-crate/"
+readme = "README.md"
+keywords = ["GIGCymru", "NHSWales", "health", "iechyd"]
+categories = ["science", "data-structures", "value-formatting"]
+include = ["src/**/*", "LICENSE.md", "README.md"]
+
+[dependencies]
+rand = "0.9.1"
+serde = { version = "1.0.219", features = ["derive"] }
