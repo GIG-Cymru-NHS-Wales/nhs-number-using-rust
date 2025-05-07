@@ -1,4 +1,5 @@
 use std::sync::LazyLock;
+use std::ops::RangeInclusive;
 use rand::Rng;
 use crate::NHSNumber;
 
@@ -16,6 +17,14 @@ pub static TESTABLE_MIN: LazyLock<NHSNumber> = LazyLock::new(|| {
 #[allow(dead_code)]
 pub static TESTABLE_MAX: LazyLock<NHSNumber> = LazyLock::new(|| {
     NHSNumber { digits: [9, 9, 9, 9, 9, 9, 9, 9, 9, 9] }
+});
+
+/// Get the NHS Number testable range.
+/// These number is valid but is never going to be issued.
+///
+#[allow(dead_code)]
+pub static TESTABLE_RANGE_INCLUSIVE: LazyLock<RangeInclusive<NHSNumber>> = LazyLock::new(|| {
+    RangeInclusive::new(*TESTABLE_MIN, *TESTABLE_MAX)
 });
 
 /// Generate a NHS Number testable range random sample.

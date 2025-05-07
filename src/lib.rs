@@ -72,8 +72,11 @@
 //! // Create a new NHS Number instance by parsing a string.
 //! let nhs_number = NHSNumber::from_str("999 123 4567").unwrap();
 //! 
+//! // Validate a NHS Number instance using the NHS check digit algorithm.
+//! let valid: bool = nhs_number.validate_check_digit();
+//! 
 //! // Create a new NHS Number instance random in the testable range.
-//! let check_digit = NHSNumber::testable_random_sample();
+//! let sample = NHSNumber::testable_random_sample();
 //! ```
 //!
 

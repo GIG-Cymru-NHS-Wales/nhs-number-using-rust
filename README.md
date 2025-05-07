@@ -59,3 +59,22 @@ minus its position. Using the number 943 476 5919 as an example:
 
 * A checksum of 11 is represented by 0 in the final NHS Number. If the checksum
   is 10 then the number is not valid.
+
+## Examples
+ 
+```rust
+use nhs_number::*;
+use std::str::FromStr;
+ 
+// Create a new NHS Number instance with the provided digits.
+let nhs_number = NHSNumber { digits: [9, 9, 9, 1, 2, 3, 4, 5, 6, 0] };
+
+// Create a new NHS Number instance by parsing a string.
+let nhs_number = NHSNumber::from_str("999 123 4560").unwrap();
+
+// Validate a NHS Number instance using the NHS check digit algorithm.
+let valid_flag: bool = nhs_number.validate_check_digit();
+
+// Create a new NHS Number instance random in the testable range.
+let sample = NHSNumber::testable_random_sample();
+```
