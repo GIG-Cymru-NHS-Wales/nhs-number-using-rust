@@ -1,8 +1,10 @@
 //! # NHS Number
 //!
-//! NHS Numbers are the unique numbers allocated in a shared numbering scheme to
-//! registered users of the three public health services in England, Wales and the
-//! Isle of Man. It is the key to the identification of patients, especially in
+//! A National Health Service (NHS) Number is a unique number allocated in a shared
+//! numbering scheme to registered users of the three public health services in
+//! England, Wales, and the Isle of Man.
+//!
+//! The NHS Number is the key to the identification of patients, especially in
 //! delivering safe care across provider organisations, and is required in all new
 //! software deployed within the National Health Service (NHS) organizations.
 //!
@@ -20,23 +22,23 @@
 //! ## Ranges
 //!
 //! Currently issued numbers are in these ranges:
-//! 
+//!
 //! * 300 000 000 to 399 999 999 (England)
-//! 
+//!
 //! * 400 000 000 to 499 999 999 (England, Wales, Isle of Man)
-//! 
+//!
 //! * 600 000 000 to 799 999 999 (England, Wales, Isle of Man)
-//! 
+//!
 //! Unavailable number ranges include:
-//! 
+//!
 //! * 320 000 001 to 399 999 999 (allocated to the Northern Irish system)
-//! 
+//!
 //! * 010 100 0000 to 311 299 9999 (used for CHI numbers in Scotland)
-//! 
+//!
 //! For test purposes, this range is valid but is guaranteed to never be issued:
-//! 
+//!
 //! * 999 000 0000 to 999 999 9999
-//! 
+//!
 //! ## Checksum
 //!
 //! The checksum is calculated by multiplying each of the first nine digits by 11
@@ -61,21 +63,24 @@
 //!   is 10 then the number is not valid.
 //!
 //! ## Examples
-//! 
+//!
 //! ```rust
 //! use nhs_number::*;
 //! use std::str::FromStr;
-//! 
-//! // Create a new NHS Number instance with the provided digits.
+//!
+//! // Create a new NHS Number with the provided digits.
 //! let nhs_number = NHSNumber { digits: [9, 9, 9, 1, 2, 3, 4, 5, 6, 0] };
 //!
-//! // Create a new NHS Number instance by parsing a string.
-//! let nhs_number = NHSNumber::from_str("999 123 4567").unwrap();
-//! 
-//! // Validate a NHS Number instance using the NHS check digit algorithm.
+//! // Create a new NHS Number by converting from a string.
+//! let nhs_number = NHSNumber::from_str("999 123 4560").unwrap();
+//!
+//! // Create a new NHS Number by parsing a string.
+//! let nhs_number: NHSNumber = "999 123 4560".parse().unwrap();
+//!
+//! // Validate a NHS Number using the NHS check digit algorithm.
 //! let valid: bool = nhs_number.validate_check_digit();
-//! 
-//! // Create a new NHS Number instance random in the testable range.
+//!
+//! // Create a new NHS Number random sample in the testable range.
 //! let sample = NHSNumber::testable_random_sample();
 //! ```
 //!
@@ -282,7 +287,7 @@ mod tests {
     }
 
     mod utilities {
- 
+
         #[test]
         fn test_format() {
             let digits = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
@@ -290,7 +295,7 @@ mod tests {
             let expect = "012 345 6789";
             assert_eq!(actual, expect);
         }
-    
+   
         #[test]
         fn test_check_digit() {
             let digits = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];

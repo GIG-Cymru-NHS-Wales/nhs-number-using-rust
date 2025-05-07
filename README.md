@@ -1,8 +1,10 @@
 # NHS Number
 
-NHS Numbers are the unique numbers allocated in a shared numbering scheme to
-registered users of the three public health services in England, Wales and the
-Isle of Man. It is the key to the identification of patients, especially in
+A National Health Service (NHS) Number is a unique number allocated in a shared
+numbering scheme to registered users of the three public health services in
+England, Wales, and the Isle of Man.
+
+The NHS Number is the key to the identification of patients, especially in
 delivering safe care across provider organisations, and is required in all new
 software deployed within the National Health Service (NHS) organizations.
 
@@ -61,20 +63,23 @@ minus its position. Using the number 943 476 5919 as an example:
   is 10 then the number is not valid.
 
 ## Examples
- 
+
 ```rust
 use nhs_number::*;
 use std::str::FromStr;
- 
-// Create a new NHS Number instance with the provided digits.
+
+// Create a new NHS Number with the provided digits.
 let nhs_number = NHSNumber { digits: [9, 9, 9, 1, 2, 3, 4, 5, 6, 0] };
 
-// Create a new NHS Number instance by parsing a string.
+// Create a new NHS Number by converting from a string.
 let nhs_number = NHSNumber::from_str("999 123 4560").unwrap();
 
-// Validate a NHS Number instance using the NHS check digit algorithm.
-let valid_flag: bool = nhs_number.validate_check_digit();
+// Create a new NHS Number by parsing a string.
+let nhs_number: NHSNumber = "999 123 4560".parse().unwrap();
 
-// Create a new NHS Number instance random in the testable range.
+// Validate a NHS Number using the check digit algorithm.
+let valid: bool = nhs_number.validate_check_digit();
+
+// Create a new NHS Number random sample in the testable range.
 let sample = NHSNumber::testable_random_sample();
 ```
