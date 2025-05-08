@@ -1,0 +1,20 @@
+cff-version: 1.2.0
+title: Selenium examples using JavaScript
+message: >-
+  If you use this work and you want to cite it,
+  then you can use the metadata from this file.
+type: software
+authors:
+  - given-names: Joel Parker
+    family-names: Henderson
+    email: joel.henderson@wales.nhs.uk
+    affiliation: wales.nhs.uk
+    orcid: 'https://orcid.org/0009-0000-4681-282X'
+identifiers:
+  - type: url
+    value: 'https://github.com/gig-cymru-nhs-wales/selenium-examples-using-javascript/'
+    description: Selenium examples using JavaScript
+repository-code: 'https://github.com/gig-cymru-nhs-wales/selenium-examples-using-javascript/'
+abstract: >-
+  Selenium examples using JavaScript
+license: See license file
