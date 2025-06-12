@@ -4,7 +4,7 @@ use crate::parse_error::ParseError;
 
 /// Implement the `FromStr` trait for NHSNumber to allow parsing from a string.
 ///
-/// This parser allows for optional spcae separators in the NHS Number string,
+/// This parser allows for optional space separators in the NHS Number string,
 /// so long as the space separators are in their expected positions.
 ///
 impl FromStr for NHSNumber {

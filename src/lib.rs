@@ -167,6 +167,14 @@ impl fmt::Display for NHSNumber {
     }
 }
 
+/// Convert the NHSNumber into a String.
+///
+impl Into<String> for NHSNumber {
+    fn into(self) -> String {
+        self.to_string()
+    }
+}
+
 //// Functional utilities
 
 /// Format the NHS Number is a 10-digit number with spaces:
@@ -231,6 +239,14 @@ mod tests {
         fn test_display() {
             let a: NHSNumber = NHSNumber::new([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
             let actual = a.to_string();
+            let expect = "012 345 6789";
+            assert_eq!(actual, expect);
+        }
+
+        #[test]
+        fn test_into_string() {
+            let a: NHSNumber = NHSNumber::new([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
+            let actual: String = a.into();
             let expect = "012 345 6789";
             assert_eq!(actual, expect);
         }
