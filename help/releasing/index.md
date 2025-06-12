@@ -32,10 +32,10 @@ git push
 Release a new version:
 
 ```sh
-top=$(git rev-parse --show-toplevel)
-version=$(gawk 'match($0, /version = "([^"]*)"/, a) {print a[1]}' "$top/Cargo.toml")
-git tag "$version"
-git push --tags
+top=$(git rev-parse --show-toplevel) &&
+version=$(gawk 'match($0, /^version = "([^"]*)"/, a) {print a[1]; exit;}' "$top/Cargo.toml") &&
+git tag "$version" &&
+git push --tags &&
 cargo publish
 ```
 

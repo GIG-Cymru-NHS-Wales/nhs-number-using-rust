@@ -88,10 +88,10 @@
 use std::fmt;
 use serde::{Serialize, Deserialize};
 
-mod from_str;
-mod parse_error;
-mod testable;
-use testable::*;
+pub mod from_str;
+pub mod parse_error;
+pub mod testable;
+pub use testable::*;
 
 /// NHS Number is a unique identifier for patients in the National Health
 /// Service of England, Wales, and the Isle of Man.
