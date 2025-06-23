@@ -1,5 +1,15 @@
 //! # NHS Number
 //!
+//! **[documentation](https://docs.rs/nhs-number/)**
+//! •
+//! **[source](https://github.com/GIG-Cymru-NHS-Wales/nhs-number-using-rust)**
+//! •
+//! **[llms.txt](https://raw.githubusercontent.com/GIG-Cymru-NHS-Wales/nhs-number-using-rust/refs/heads/main/llms.txt)**
+//! •
+//! **[crate](https://crates.io/crates/nhs-number)**
+//! •
+//! **[email](mailto:joel.henderson@wales.nhs.uk)**
+//!
 //! A National Health Service (NHS) Number is a unique number allocated in a shared
 //! numbering scheme to registered users of the three public health services in
 //! England, Wales, and the Isle of Man.

@@ -8,7 +8,7 @@
 •
 **[crate](https://crates.io/crates/nhs-number)**
 •
-**[email](mailto:joel@joelparkerhenderson.com)**
+**[email](mailto:joel.henderson@wales.nhs.uk)**
 
 A National Health Service (NHS) Number is a unique number allocated in a shared
 numbering scheme to registered users of the three public health services in
