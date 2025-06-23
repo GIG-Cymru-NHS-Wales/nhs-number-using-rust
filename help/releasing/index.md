@@ -16,7 +16,16 @@ Verify everything is correct locally:
 cargo build --release
 cargo test
 cargo doc
+```
+
+## AI
+
+Run:
+
+```sh
 rustdoc-llms
+cp target/doc/nhs_number.json llms.json
+cp target/doc/llms.txt llms.txt
 ```
 
 ## Commit
@@ -24,6 +33,7 @@ rustdoc-llms
 Run:
 
 ```sh
+git add --all
 git commit "Your message here"
 ```
 
