@@ -1,6 +1,6 @@
 # Crate Documentation
 
-**Version:** 0.2.5
+**Version:** 0.3.0
 
 **Format Version:** 43
 
@@ -75,21 +75,15 @@ minus its position. Using the number 943 476 5919 as an example:
 ```rust
 use nhs_number::*;
 use std::str::FromStr;
-
-// Create a new NHS Number with the provided digits.
-let nhs_number = NHSNumber { digits: [9, 9, 9, 1, 2, 3, 4, 5, 6, 0] };
-
+ 
+// NHS Number that we can use for testing purposes
+let str = "999 123 4560";
+ 
 // Create a new NHS Number by converting from a string.
-let nhs_number = NHSNumber::from_str("999 123 4560").unwrap();
+let nhs_number = NHSNumber::from_str(str).unwrap();
 
-// Create a new NHS Number by parsing a string.
-let nhs_number: NHSNumber = "999 123 4560".parse().unwrap();
-
-// Validate a NHS Number using the NHS check digit algorithm.
+// Validate a NHS Number using the check digit algorithm.
 let valid: bool = nhs_number.validate_check_digit();
-
-// Create a new NHS Number random sample in the testable range.
-let sample = NHSNumber::testable_random_sample();
 ```
 
 
@@ -121,40 +115,14 @@ pub struct ParseError;
 
 ###### Trait Implementations
 
-- **Freeze**
-- **Send**
-- **StructuralPartialEq**
-- **Borrow**
-  - ```rust
-    fn borrow(self: &Self) -> &T { /* ... */ }
-    ```
-
-- **BorrowMut**
-  - ```rust
-    fn borrow_mut(self: &mut Self) -> &mut T { /* ... */ }
-    ```
-
-- **Unpin**
-- **Into**
-  - ```rust
-    fn into(self: Self) -> U { /* ... */ }
-    ```
-    Calls `U::from(self)`.
-
-- **VZip**
-  - ```rust
-    fn vzip(self: Self) -> V { /* ... */ }
-    ```
-
-- **UnwindSafe**
 - **TryFrom**
   - ```rust
     fn try_from(value: U) -> Result<T, <T as TryFrom<U>>::Error> { /* ... */ }
     ```
 
-- **Any**
+- **VZip**
   - ```rust
-    fn type_id(self: &Self) -> TypeId { /* ... */ }
+    fn vzip(self: Self) -> V { /* ... */ }
     ```
 
 - **Debug**
@@ -162,11 +130,24 @@ pub struct ParseError;
     fn fmt(self: &Self, f: &mut $crate::fmt::Formatter<''_>) -> $crate::fmt::Result { /* ... */ }
     ```
 
-- **RefUnwindSafe**
-- **Sync**
-- **TryInto**
+- **Send**
+- **Freeze**
+- **Unpin**
+- **Into**
   - ```rust
-    fn try_into(self: Self) -> Result<U, <U as TryFrom<T>>::Error> { /* ... */ }
+    fn into(self: Self) -> U { /* ... */ }
+    ```
+    Calls `U::from(self)`.
+
+- **StructuralPartialEq**
+- **BorrowMut**
+  - ```rust
+    fn borrow_mut(self: &mut Self) -> &mut T { /* ... */ }
+    ```
+
+- **Borrow**
+  - ```rust
+    fn borrow(self: &Self) -> &T { /* ... */ }
     ```
 
 - **From**
@@ -175,10 +156,23 @@ pub struct ParseError;
     ```
     Returns the argument unchanged.
 
-- **Eq**
 - **PartialEq**
   - ```rust
     fn eq(self: &Self, other: &ParseError) -> bool { /* ... */ }
+    ```
+
+- **Sync**
+- **RefUnwindSafe**
+- **Eq**
+- **Any**
+  - ```rust
+    fn type_id(self: &Self) -> TypeId { /* ... */ }
+    ```
+
+- **UnwindSafe**
+- **TryInto**
+  - ```rust
+    fn try_into(self: Self) -> Result<U, <U as TryFrom<T>>::Error> { /* ... */ }
     ```
 
 ## Module `testable`
@@ -198,6 +192,15 @@ pub mod testable { /* ... */ }
 Generate a NHS Number testable range random sample.
 The generated number is valid but is never going to be issued.
 
+Example:
+
+```rust
+use nhs_number::{NHSNumber, testable::*};
+let nhs_number = testable_random_sample();
+assert!(nhs_number >= *TESTABLE_MIN);
+assert!(nhs_number <= *TESTABLE_MAX);
+```
+
 
 ```rust
 pub fn testable_random_sample() -> crate::NHSNumber { /* ... */ }
@@ -214,6 +217,15 @@ pub fn testable_random_sample() -> crate::NHSNumber { /* ... */ }
 Get the NHS Number testable range minimum value.
 This number is valid but is never going to be issued.
 
+Example:
+
+```rust
+use nhs_number::NHSNumber;
+use nhs_number::testable::TESTABLE_MIN;
+let nhs_number = NHSNumber { digits: [9, 9, 9, 0, 1, 2, 3, 4, 5, 6] };
+assert!(nhs_number >= *TESTABLE_MIN);
+```
+
 
 ```rust
 pub static TESTABLE_MIN: std::sync::LazyLock<crate::NHSNumber> = _;
@@ -228,6 +240,15 @@ pub static TESTABLE_MIN: std::sync::LazyLock<crate::NHSNumber> = _;
 Get the NHS Number testable range maximum value.
 This number is valid but is never going to be issued.
 
+Example:
+
+```rust
+use nhs_number::NHSNumber;
+use nhs_number::testable::TESTABLE_MAX;
+let nhs_number = NHSNumber { digits: [9, 9, 9, 0, 1, 2, 3, 4, 5, 6] };
+assert!(nhs_number <= *TESTABLE_MAX);
+```
+
 
 ```rust
 pub static TESTABLE_MAX: std::sync::LazyLock<crate::NHSNumber> = _;
@@ -240,8 +261,14 @@ pub static TESTABLE_MAX: std::sync::LazyLock<crate::NHSNumber> = _;
 - `#[allow(dead_code)]`
 
 Get the NHS Number testable range.
-These number is valid but is never going to be issued.
+This range is valid but is never going to be issued.
 
+Example:
+```rust
+ use nhs_number::{NHSNumber, testable::*};
+let nhs_number = NHSNumber { digits: [9, 9, 9, 0, 1, 2, 3, 4, 5, 6] };
+ assert!(TESTABLE_RANGE_INCLUSIVE.contains(&nhs_number));
+```
 
 ```rust
 pub static TESTABLE_RANGE_INCLUSIVE: std::sync::LazyLock<std::ops::RangeInclusive<crate::NHSNumber>> = _;
@@ -259,6 +286,12 @@ Reference:
 * [National Health Service (NHS)](https://en.wikipedia.org/wiki/National_Health_Service)
 
 * [NHS Number](https://en.wikipedia.org/wiki/NHS_number)
+
+```rust
+use nhs_number::NHSNumber;
+let digits = [9, 9, 9, 1, 2, 3, 4, 5, 6, 0];
+let nhs_number = NHSNumber { digits: digits };
+```
 
 
 ```rust
@@ -285,10 +318,12 @@ pub struct NHSNumber {
 - ```rust
   pub fn check_digit(self: &Self) -> i8 { /* ... */ }
   ```
+  Get the NHS Number check digit i.e. the last digit.
 
 - ```rust
   pub fn calculate_check_digit(self: &Self) -> i8 { /* ... */ }
   ```
+  Calculate the NHS Number check digit using a checksum algorithm.
 
 - ```rust
   pub fn validate_check_digit(self: &Self) -> bool { /* ... */ }
@@ -298,16 +333,20 @@ pub struct NHSNumber {
 - ```rust
   pub fn testable_random_sample() -> NHSNumber { /* ... */ }
   ```
-  Validate the NHS Number check digit equals the calculated check digit.
+  Generate a testable random sample NHS Number.
 
 ##### Trait Implementations
 
-- **VZip**
+- **TryFrom**
   - ```rust
-    fn vzip(self: Self) -> V { /* ... */ }
+    fn try_from(value: U) -> Result<T, <T as TryFrom<U>>::Error> { /* ... */ }
     ```
 
-- **Freeze**
+- **Any**
+  - ```rust
+    fn type_id(self: &Self) -> TypeId { /* ... */ }
+    ```
+
 - **ToOwned**
   - ```rust
     fn to_owned(self: &Self) -> T { /* ... */ }
@@ -317,28 +356,73 @@ pub struct NHSNumber {
     fn clone_into(self: &Self, target: &mut T) { /* ... */ }
     ```
 
-- **PartialOrd**
+- **Borrow**
   - ```rust
-    fn partial_cmp(self: &Self, other: &NHSNumber) -> $crate::option::Option<$crate::cmp::Ordering> { /* ... */ }
+    fn borrow(self: &Self) -> &T { /* ... */ }
     ```
 
-- **Debug**
+- **Sync**
+- **CloneToUninit**
   - ```rust
-    fn fmt(self: &Self, f: &mut $crate::fmt::Formatter<''_>) -> $crate::fmt::Result { /* ... */ }
+    unsafe fn clone_to_uninit(self: &Self, dest: *mut u8) { /* ... */ }
     ```
 
+- **From**
+  - ```rust
+    fn from(t: T) -> T { /* ... */ }
+    ```
+    Returns the argument unchanged.
+
+- **Deserialize**
+  - ```rust
+    fn deserialize<__D>(__deserializer: __D) -> _serde::__private::Result<Self, <__D as >::Error>
+where
+    __D: _serde::Deserializer<''de> { /* ... */ }
+    ```
+
+- **Unpin**
+- **Display**
+  - ```rust
+    fn fmt(self: &Self, f: &mut fmt::Formatter<''_>) -> fmt::Result { /* ... */ }
+    ```
+
+- **Send**
 - **TryInto**
   - ```rust
     fn try_into(self: Self) -> Result<U, <U as TryFrom<T>>::Error> { /* ... */ }
     ```
 
-- **Eq**
-- **Send**
+- **FromStr**
+  - ```rust
+    fn from_str(s: &str) -> Result<Self, <Self as >::Err> { /* ... */ }
+    ```
+
+- **Serialize**
+  - ```rust
+    fn serialize<__S>(self: &Self, __serializer: __S) -> _serde::__private::Result<<__S as >::Ok, <__S as >::Error>
+where
+    __S: _serde::Serializer { /* ... */ }
+    ```
+
+- **Ord**
+  - ```rust
+    fn cmp(self: &Self, other: &NHSNumber) -> $crate::cmp::Ordering { /* ... */ }
+    ```
+
+- **Copy**
 - **BorrowMut**
   - ```rust
     fn borrow_mut(self: &mut Self) -> &mut T { /* ... */ }
     ```
 
+- **DeserializeOwned**
+- **StructuralPartialEq**
+- **PartialOrd**
+  - ```rust
+    fn partial_cmp(self: &Self, other: &NHSNumber) -> $crate::option::Option<$crate::cmp::Ordering> { /* ... */ }
+    ```
+
+- **Eq**
 - **Into**
   - ```rust
     fn into(self: Self) -> U { /* ... */ }
@@ -349,83 +433,34 @@ pub struct NHSNumber {
     fn into(self: Self) -> String { /* ... */ }
     ```
 
-- **Clone**
-  - ```rust
-    fn clone(self: &Self) -> NHSNumber { /* ... */ }
-    ```
-
-- **Ord**
-  - ```rust
-    fn cmp(self: &Self, other: &NHSNumber) -> $crate::cmp::Ordering { /* ... */ }
-    ```
-
-- **Serialize**
-  - ```rust
-    fn serialize<__S>(self: &Self, __serializer: __S) -> _serde::__private::Result<<__S as >::Ok, <__S as >::Error>
-where
-    __S: _serde::Serializer { /* ... */ }
-    ```
-
-- **Borrow**
-  - ```rust
-    fn borrow(self: &Self) -> &T { /* ... */ }
-    ```
-
-- **Deserialize**
-  - ```rust
-    fn deserialize<__D>(__deserializer: __D) -> _serde::__private::Result<Self, <__D as >::Error>
-where
-    __D: _serde::Deserializer<''de> { /* ... */ }
-    ```
-
-- **RefUnwindSafe**
-- **CloneToUninit**
-  - ```rust
-    unsafe fn clone_to_uninit(self: &Self, dest: *mut u8) { /* ... */ }
-    ```
-
-- **Sync**
 - **PartialEq**
   - ```rust
     fn eq(self: &Self, other: &NHSNumber) -> bool { /* ... */ }
     ```
 
-- **FromStr**
+- **Clone**
   - ```rust
-    fn from_str(s: &str) -> Result<Self, <Self as >::Err> { /* ... */ }
+    fn clone(self: &Self) -> NHSNumber { /* ... */ }
     ```
 
-- **Unpin**
+- **UnwindSafe**
+- **VZip**
+  - ```rust
+    fn vzip(self: Self) -> V { /* ... */ }
+    ```
+
+- **RefUnwindSafe**
+- **Debug**
+  - ```rust
+    fn fmt(self: &Self, f: &mut $crate::fmt::Formatter<''_>) -> $crate::fmt::Result { /* ... */ }
+    ```
+
 - **ToString**
   - ```rust
     fn to_string(self: &Self) -> String { /* ... */ }
     ```
 
-- **Copy**
-- **From**
-  - ```rust
-    fn from(t: T) -> T { /* ... */ }
-    ```
-    Returns the argument unchanged.
-
-- **UnwindSafe**
-- **StructuralPartialEq**
-- **Display**
-  - ```rust
-    fn fmt(self: &Self, f: &mut fmt::Formatter<''_>) -> fmt::Result { /* ... */ }
-    ```
-
-- **DeserializeOwned**
-- **Any**
-  - ```rust
-    fn type_id(self: &Self) -> TypeId { /* ... */ }
-    ```
-
-- **TryFrom**
-  - ```rust
-    fn try_from(value: U) -> Result<T, <T as TryFrom<U>>::Error> { /* ... */ }
-    ```
-
+- **Freeze**
 ## Functions
 
 ### Function `format`
@@ -434,13 +469,26 @@ where
 
 - `#[allow(dead_code)]`
 
-Format the NHS Number is a 10-digit number with spaces:
+Format the NHS Number as a 10-digit number with spaces.
+
+Example:
+
+```rust
+let digits = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+let nhs_number_string = ::nhs_number::format(digits);
+assert_eq!(nhs_number_string, "012 345 6789");
+```
+
+The NHS Number is formatted as a 10-digit number with spaces:
 
 * 3 digits
 * space
 * 3 digits
 * space
 * 4 digits
+
+This function output must be identical to the method
+[`NHSNumber::to_string`](NHSNumber::to_string).
 
 
 ```rust
@@ -455,8 +503,42 @@ pub fn format(digits: [i8; 10]) -> String { /* ... */ }
 
 Get the NHS Number check digit i.e. the last digit.
 
+Example:
+
+```rust
+let digits = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+let check_digit = ::nhs_number::check_digit(digits);
+assert_eq!(check_digit, 9);
+```
+
+This function is called by the method [`NHSNumber::check_digit`](NHSNumber::check_digit).
+
+
 ```rust
 pub fn check_digit(digits: [i8; 10]) -> i8 { /* ... */ }
+```
+
+### Function `calculate_check_digit`
+
+**Attributes:**
+
+- `#[allow(dead_code)]`
+
+Calculate the NHS Number check digit using a checksum algorithm.
+
+Example:
+
+```rust
+let digits = [9, 9, 9, 1, 2, 3, 4, 5, 6, 0];
+let check_digit = ::nhs_number::calculate_check_digit(digits);
+assert_eq!(check_digit, 0);
+```
+
+This function is called by the method [`NHSNumber::calculate_check_digit`](NHSNumber::calculate_check_digit).
+
+
+```rust
+pub fn calculate_check_digit(digits: [i8; 10]) -> i8 { /* ... */ }
 ```
 
 ## Re-exports

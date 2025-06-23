@@ -1,5 +1,15 @@
 # NHS Number
 
+**[documentation](https://docs.rs/nhs-number/)**
+•
+**[source](https://github.com/GIG-Cymru-NHS-Wales/nhs-number-using-rust)**
+•
+**[llms.txt](https://raw.githubusercontent.com/GIG-Cymru-NHS-Wales/nhs-number-using-rust/refs/heads/main/llms.txt)**
+•
+**[crate](https://crates.io/crates/nhs-number)**
+•
+**[email](mailto:joel@joelparkerhenderson.com)**
+
 A National Health Service (NHS) Number is a unique number allocated in a shared
 numbering scheme to registered users of the three public health services in
 England, Wales, and the Isle of Man.
@@ -68,18 +78,12 @@ minus its position. Using the number 943 476 5919 as an example:
 use nhs_number::*;
 use std::str::FromStr;
 
-// Create a new NHS Number with the provided digits.
-let nhs_number = NHSNumber { digits: [9, 9, 9, 1, 2, 3, 4, 5, 6, 0] };
+// NHS Number that we can use for testing purposes
+let str = "999 123 4560";
 
 // Create a new NHS Number by converting from a string.
-let nhs_number = NHSNumber::from_str("999 123 4560").unwrap();
-
-// Create a new NHS Number by parsing a string.
-let nhs_number: NHSNumber = "999 123 4560".parse().unwrap();
+let nhs_number = NHSNumber::from_str(str).unwrap();
 
 // Validate a NHS Number using the check digit algorithm.
 let valid: bool = nhs_number.validate_check_digit();
-
-// Create a new NHS Number random sample in the testable range.
-let sample = NHSNumber::testable_random_sample();
 ```

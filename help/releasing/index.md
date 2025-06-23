@@ -13,9 +13,28 @@ Update the version number.
 Verify everything is correct locally:
 
 ```sh
-cargo test
 cargo build --release
+cargo test
 cargo doc
+rustdoc-llms
+```
+
+## Commit
+
+Run:
+
+```sh
+git commit "Your message here"
+```
+
+## Tag
+
+Run:
+
+```sh
+top=$(git rev-parse --show-toplevel) &&
+version=$(gawk 'match($0, /^version = "([^"]*)"/, a) {print a[1]; exit;}' "$top/Cargo.toml") &&
+git tag "$version"
 ```
 
 ## Push
@@ -23,19 +42,14 @@ cargo doc
 Run:
 
 ```sh
-git commit "Your message here"
-git push
+git push --tags
 ```
 
-## Release
+## Publish
 
-Release a new version:
+Run:
 
 ```sh
-top=$(git rev-parse --show-toplevel) &&
-version=$(gawk 'match($0, /^version = "([^"]*)"/, a) {print a[1]; exit;}' "$top/Cargo.toml") &&
-git tag "$version" &&
-git push --tags &&
 cargo publish
 ```
 

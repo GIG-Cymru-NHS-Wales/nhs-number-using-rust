@@ -1,6 +1,6 @@
 [package]
 name = "nhs-number"
-version = "0.2.5"
+version = "0.3.0"
 edition = "2024"
 authors = ["Joel Parker Henderson <joel.henderson@wales.nhs.uk>"]
 description = "National Health Service (NHS) number for NHS England, NHS Wales, NHS Isle of Man."
@@ -14,3 +14,6 @@ include = ["src/**/*", "LICENSE.md", "README.md"]
 [dependencies]
 rand = "0.9.1"
 serde = { version = "1.0.219", features = ["derive"] }
+
+[dev-dependencies]
+rustdoc-llms = "0.1.0"

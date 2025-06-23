@@ -1,11 +1,27 @@
-use std::str::FromStr;
 use crate::NHSNumber;
 use crate::parse_error::ParseError;
+use std::str::FromStr;
 
 /// Implement the `FromStr` trait for NHSNumber to allow parsing from a string.
 ///
 /// This parser allows for optional space separators in the NHS Number string,
 /// so long as the space separators are in their expected positions.
+///
+/// A valid NHS Number format can be either:
+///
+/// - 10 digits e.g. "0123456789"
+///
+/// - 12 characters with spaces e.g. "012 345 6789".
+///
+/// Example:
+///
+/// ```rust
+/// use nhs_number::NHSNumber;
+/// use std::str::FromStr;
+/// let nhs_number_str = "012 345 6789";
+/// let nhs_number: NHSNumber = NHSNumber::from_str(nhs_number_str).unwrap();
+/// assert_eq!(nhs_number.digits, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
+/// ```
 ///
 impl FromStr for NHSNumber {
     type Err = ParseError;
@@ -18,22 +34,26 @@ impl FromStr for NHSNumber {
                     digits[i] = chars[i].to_digit(10).ok_or(ParseError)? as i8
                 }
                 Ok(NHSNumber { digits: digits })
-            },
+            }
             12 => {
-                if chars[3] != ' ' || chars[7] != ' ' { return Err(ParseError); }
+                if chars[3] != ' ' || chars[7] != ' ' {
+                    return Err(ParseError);
+                }
                 let mut digits: [i8; 10] = [0; 10];
                 for i in 0..3 {
                     digits[i] = chars[i].to_digit(10).ok_or(ParseError)? as i8
                 }
                 for i in 0..3 {
-                    digits[i+3] = chars[i+4].to_digit(10).ok_or(ParseError)? as i8
+                    digits[i + 3] = chars[i + 4].to_digit(10).ok_or(ParseError)? as i8
                 }
                 for i in 0..4 {
-                    digits[i+6] = chars[i+8].to_digit(10).ok_or(ParseError)? as i8
+                    digits[i + 6] = chars[i + 8].to_digit(10).ok_or(ParseError)? as i8
                 }
-                Ok(NHSNumber { digits: digits })        
-            },
-            _ => { return Err(ParseError); }
+                Ok(NHSNumber { digits: digits })
+            }
+            _ => {
+                return Err(ParseError);
+            }
         }
     }
 }
@@ -106,5 +126,4 @@ mod tests {
         let result: Result<NHSNumber, ParseError> = NHSNumber::from_str(&s);
         assert!(result.is_err());
     }
-
 }
