@@ -67,26 +67,19 @@
 //! ```rust
 //! use nhs_number::*;
 //! use std::str::FromStr;
-//!
-//! // Create a new NHS Number with the provided digits.
-//! let nhs_number = NHSNumber { digits: [9, 9, 9, 1, 2, 3, 4, 5, 6, 0] };
-//!
+//! 
+//! // NHS Number that we can use for testing purposes
+//! let str = "999 123 4560";
+//! 
 //! // Create a new NHS Number by converting from a string.
-//! let nhs_number = NHSNumber::from_str("999 123 4560").unwrap();
+//! let nhs_number = NHSNumber::from_str(str).unwrap();
 //!
-//! // Create a new NHS Number by parsing a string.
-//! let nhs_number: NHSNumber = "999 123 4560".parse().unwrap();
-//!
-//! // Validate a NHS Number using the NHS check digit algorithm.
+//! // Validate a NHS Number using the check digit algorithm.
 //! let valid: bool = nhs_number.validate_check_digit();
-//!
-//! // Create a new NHS Number random sample in the testable range.
-//! let sample = NHSNumber::testable_random_sample();
 //! ```
 //!
-
+use serde::{Deserialize, Serialize};
 use std::fmt;
-use serde::{Serialize, Deserialize};
 
 pub mod from_str;
 pub mod parse_error;
@@ -102,47 +95,122 @@ pub use testable::*;
 ///
 /// * [NHS Number](https://en.wikipedia.org/wiki/NHS_number)
 ///
+/// ```rust
+/// use nhs_number::NHSNumber;
+/// let digits = [9, 9, 9, 1, 2, 3, 4, 5, 6, 0];
+/// let nhs_number = NHSNumber { digits: digits };
+/// ```
+///
 #[derive(Debug, PartialEq, Eq, PartialOrd, Ord, Clone, Copy, Serialize, Deserialize)]
 pub struct NHSNumber {
     pub digits: [i8; 10],
 }
 
 impl NHSNumber {
-
     /// Create a new NHS Number instance with the provided digits.
+    ///
+    /// Example:
+    ///
+    /// ```rust
+    /// use nhs_number::NHSNumber;
+    /// let digits = [9, 9, 9, 1, 2, 3, 4, 5, 6, 0];
+    /// let nhs_number = NHSNumber::new(digits);
+    /// ```
+    ///
     #[allow(dead_code)]
     pub fn new(digits: [i8; 10]) -> Self {
         NHSNumber { digits }
     }
 
-    // Get the NHS Number check digit i.e. the last digit.
+    /// Get the NHS Number check digit i.e. the last digit.
+    ///
+    /// Example:
+    ///
+    /// ```rust
+    /// use nhs_number::NHSNumber;
+    /// let digits = [9, 9, 9, 1, 2, 3, 4, 5, 6, 0];
+    /// let nhs_number = NHSNumber::new(digits);
+    /// let check_digit = nhs_number.check_digit();
+    /// assert_eq!(check_digit, 0);
+    /// ```
+    ///
+    /// This method calls the function [`check_digit`](crate::check_digit).
+    ///
     #[allow(dead_code)]
     pub fn check_digit(&self) -> i8 {
         crate::check_digit(self.digits)
     }
 
-    // Calculate the NHS Number check digit using a checksum algorithm.
+    /// Calculate the NHS Number check digit using a checksum algorithm.
+    ///
+    /// Example:
+    ///
+    /// ```rust
+    /// use nhs_number::NHSNumber;
+    /// let digits = [9, 9, 9, 1, 2 , 3, 4, 5, 6, 0];
+    /// let nhs_number = NHSNumber::new(digits);
+    /// let check_digit = nhs_number.calculate_check_digit();
+    /// assert_eq!(check_digit, 0);
+    /// ```
+    ///
+    /// This method calls the function [`calculate_check_digit`](crate::calculate_check_digit).
+    ///
     #[allow(dead_code)]
     pub fn calculate_check_digit(&self) -> i8 {
         crate::calculate_check_digit(self.digits)
     }
 
     /// Validate the NHS Number check digit equals the calculated check digit.
+    ///
+    /// Example:
+    ///     
+    /// ```rust
+    /// use nhs_number::NHSNumber;
+    /// let digits = [9, 9, 9, 1, 2, 3, 4, 5, 6, 0];
+    /// let nhs_number = NHSNumber::new(digits);
+    /// let is_valid = nhs_number.validate_check_digit();
+    /// assert_eq!(is_valid, true);
+    /// ```
+    ///
+    /// This method calls the function [`validate_check_digit`](crate::validate_check_digit).
+    ///
     #[allow(dead_code)]
     pub fn validate_check_digit(&self) -> bool {
         crate::check_digit(self.digits) == crate::calculate_check_digit(self.digits)
     }
 
-    /// Validate the NHS Number check digit equals the calculated check digit.
+    /// Generate a testable random sample NHS Number.
+    ///
+    /// Example:
+    ///
+    /// ```rust
+    /// use nhs_number::{NHSNumber, testable::{TESTABLE_MIN, TESTABLE_MAX}};
+    /// let sample = NHSNumber::testable_random_sample();
+    /// assert!(sample >= *TESTABLE_MIN);
+    /// assert!(sample <= *TESTABLE_MAX);
+    /// ```
+    ///
+    /// This method calls the function [`testable_random_sample`](crate::testable_random_sample).
+    ///
     #[allow(dead_code)]
     pub fn testable_random_sample() -> NHSNumber {
         crate::testable_random_sample()
     }
-
-
 }
 
-/// Format the NHS Number is a 10-digit number with spaces:
+/// Format the NHS Number as a 10-digit number with spaces.
+///
+/// Example:
+///
+/// ```rust
+/// use nhs_number::NHSNumber;
+/// let digits = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+/// let nhs_number = NHSNumber::new(digits);
+/// let nhs_number_string = nhs_number.to_string();
+/// assert_eq!(nhs_number_string, "012 345 6789");
+/// ```
+///
+/// The NHS Number is formatted as a 10-digit number with spaces:
 ///
 /// * 3 digits
 /// * space
@@ -150,9 +218,14 @@ impl NHSNumber {
 /// * space
 /// * 4 digits
 ///
+/// This method output must be identical to the function
+/// [`format`](crate::format).
+///
 impl fmt::Display for NHSNumber {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{}{}{} {}{}{} {}{}{}{}",
+        write!(
+            f,
+            "{}{}{} {}{}{} {}{}{}{}",
             self.digits[0],
             self.digits[1],
             self.digits[2],
@@ -169,6 +242,15 @@ impl fmt::Display for NHSNumber {
 
 /// Convert the NHSNumber into a String.
 ///
+/// Example:
+/// ```rust
+/// use nhs_number::NHSNumber;
+/// let digits = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+/// let nhs_number = NHSNumber::new(digits);
+/// let nhs_number_string: String = nhs_number.into();
+/// assert_eq!(nhs_number_string, "012 345 6789");
+/// ```
+///
 impl Into<String> for NHSNumber {
     fn into(self) -> String {
         self.to_string()
@@ -177,13 +259,26 @@ impl Into<String> for NHSNumber {
 
 //// Functional utilities
 
-/// Format the NHS Number is a 10-digit number with spaces:
+/// Format the NHS Number as a 10-digit number with spaces.
+///
+/// Example:
+///
+/// ```rust
+/// let digits = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+/// let nhs_number_string = ::nhs_number::format(digits);
+/// assert_eq!(nhs_number_string, "012 345 6789");
+/// ```
+///
+/// The NHS Number is formatted as a 10-digit number with spaces:
 ///
 /// * 3 digits
 /// * space
 /// * 3 digits
 /// * space
 /// * 4 digits
+///
+/// This function output must be identical to the method
+/// [`NHSNumber::to_string`](NHSNumber::to_string).
 ///
 #[allow(dead_code)]
 pub fn format(digits: [i8; 10]) -> String {
@@ -203,21 +298,42 @@ pub fn format(digits: [i8; 10]) -> String {
 }
 
 /// Get the NHS Number check digit i.e. the last digit.
+///
+/// Example:
+///
+/// ```rust
+/// let digits = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+/// let check_digit = ::nhs_number::check_digit(digits);
+/// assert_eq!(check_digit, 9);
+/// ```
+///
+/// This function is called by the method [`NHSNumber::check_digit`](NHSNumber::check_digit).
+///
 #[allow(dead_code)]
 pub fn check_digit(digits: [i8; 10]) -> i8 {
     digits[9]
 }
 
 /// Calculate the NHS Number check digit using a checksum algorithm.
+///
+/// Example:
+///
+/// ```rust
+/// let digits = [9, 9, 9, 1, 2, 3, 4, 5, 6, 0];
+/// let check_digit = ::nhs_number::calculate_check_digit(digits);
+/// assert_eq!(check_digit, 0);
+/// ```
+///
+/// This function is called by the method [`NHSNumber::calculate_check_digit`](NHSNumber::calculate_check_digit).
+///
 #[allow(dead_code)]
-fn calculate_check_digit(digits: [i8; 10]) -> i8 {
+pub fn calculate_check_digit(digits: [i8; 10]) -> i8 {
     let sum: usize = digits
-    .iter()
-    .take(9)
-    .enumerate()
-    .map(|(i, &d)|
-        d as usize * (10 - i as usize)
-    ).sum();
+        .iter()
+        .take(9)
+        .enumerate()
+        .map(|(i, &d)| d as usize * (10 - i as usize))
+        .sum();
     ((11 - (sum % 11)) % 10) as i8
 }
 
@@ -299,7 +415,6 @@ mod tests {
             assert!(a >= *crate::testable::TESTABLE_MIN);
             assert!(a <= *crate::testable::TESTABLE_MAX);
         }
-
     }
 
     mod utilities {
@@ -311,7 +426,7 @@ mod tests {
             let expect = "012 345 6789";
             assert_eq!(actual, expect);
         }
-   
+
         #[test]
         fn test_check_digit() {
             let digits = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
@@ -327,7 +442,5 @@ mod tests {
             let expect: i8 = 0;
             assert_eq!(actual, expect);
         }
-
     }
-
 }
