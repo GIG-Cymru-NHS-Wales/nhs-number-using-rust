@@ -1,0 +1,469 @@
+# Crate Documentation
+
+**Version:** 0.2.5
+
+**Format Version:** 43
+
+# Module `nhs_number`
+
+# NHS Number
+
+A National Health Service (NHS) Number is a unique number allocated in a shared
+numbering scheme to registered users of the three public health services in
+England, Wales, and the Isle of Man.
+
+The NHS Number is the key to the identification of patients, especially in
+delivering safe care across provider organisations, and is required in all new
+software deployed within the National Health Service (NHS) organizations.
+
+References:
+
+* [National Health Service (NHS)](https://en.wikipedia.org/wiki/National_Health_Service)
+
+* [NHS Number](https://en.wikipedia.org/wiki/NHS_number)
+
+## Syntax
+
+The current system uses a ten-digit number in '3 3 4' format with the final
+digit being an error-detecting checksum. Examples given include 987 654 4321.
+
+## Ranges
+
+Currently issued numbers are in these ranges:
+
+* 300 000 000 to 399 999 999 (England)
+
+* 400 000 000 to 499 999 999 (England, Wales, Isle of Man)
+
+* 600 000 000 to 799 999 999 (England, Wales, Isle of Man)
+
+Unavailable number ranges include:
+
+* 320 000 001 to 399 999 999 (allocated to the Northern Irish system)
+
+* 010 100 0000 to 311 299 9999 (used for CHI numbers in Scotland)
+
+For test purposes, this range is valid but is guaranteed to never be issued:
+
+* 999 000 0000 to 999 999 9999
+
+## Checksum
+
+The checksum is calculated by multiplying each of the first nine digits by 11
+minus its position. Using the number 943 476 5919 as an example:
+
+* The first digit is 9. This is multiplied by 10.
+
+* The second digit is 4. This is multiplied by 9.
+
+* And so on until the ninth digit (1) is multiplied by 2.
+
+* The result of this calculation is summed. In this example: (9×10) + (4×9) +
+  (3×8) + (4×7) + (7×6) + (6×5) + (5×4) + (9×3) + (1×2) = 299.
+
+* The remainder when dividing this number by 11 is calculated, yielding a number
+  in the range 0–10, which would be 2 in this case.
+
+* Finally, this number is subtracted from 11 to give the checksum in the range
+  1–11, in this case 9, which becomes the last digit of the NHS Number.
+
+* A checksum of 11 is represented by 0 in the final NHS Number. If the checksum
+  is 10 then the number is not valid.
+
+## Examples
+
+```rust
+use nhs_number::*;
+use std::str::FromStr;
+
+// Create a new NHS Number with the provided digits.
+let nhs_number = NHSNumber { digits: [9, 9, 9, 1, 2, 3, 4, 5, 6, 0] };
+
+// Create a new NHS Number by converting from a string.
+let nhs_number = NHSNumber::from_str("999 123 4560").unwrap();
+
+// Create a new NHS Number by parsing a string.
+let nhs_number: NHSNumber = "999 123 4560".parse().unwrap();
+
+// Validate a NHS Number using the NHS check digit algorithm.
+let valid: bool = nhs_number.validate_check_digit();
+
+// Create a new NHS Number random sample in the testable range.
+let sample = NHSNumber::testable_random_sample();
+```
+
+
+## Modules
+
+## Module `from_str`
+
+```rust
+pub mod from_str { /* ... */ }
+```
+
+## Module `parse_error`
+
+```rust
+pub mod parse_error { /* ... */ }
+```
+
+### Types
+
+#### Struct `ParseError`
+
+NHS Number Parse Error, which is for the implementation `FromStr`.
+
+```rust
+pub struct ParseError;
+```
+
+##### Implementations
+
+###### Trait Implementations
+
+- **Freeze**
+- **Send**
+- **StructuralPartialEq**
+- **Borrow**
+  - ```rust
+    fn borrow(self: &Self) -> &T { /* ... */ }
+    ```
+
+- **BorrowMut**
+  - ```rust
+    fn borrow_mut(self: &mut Self) -> &mut T { /* ... */ }
+    ```
+
+- **Unpin**
+- **Into**
+  - ```rust
+    fn into(self: Self) -> U { /* ... */ }
+    ```
+    Calls `U::from(self)`.
+
+- **VZip**
+  - ```rust
+    fn vzip(self: Self) -> V { /* ... */ }
+    ```
+
+- **UnwindSafe**
+- **TryFrom**
+  - ```rust
+    fn try_from(value: U) -> Result<T, <T as TryFrom<U>>::Error> { /* ... */ }
+    ```
+
+- **Any**
+  - ```rust
+    fn type_id(self: &Self) -> TypeId { /* ... */ }
+    ```
+
+- **Debug**
+  - ```rust
+    fn fmt(self: &Self, f: &mut $crate::fmt::Formatter<''_>) -> $crate::fmt::Result { /* ... */ }
+    ```
+
+- **RefUnwindSafe**
+- **Sync**
+- **TryInto**
+  - ```rust
+    fn try_into(self: Self) -> Result<U, <U as TryFrom<T>>::Error> { /* ... */ }
+    ```
+
+- **From**
+  - ```rust
+    fn from(t: T) -> T { /* ... */ }
+    ```
+    Returns the argument unchanged.
+
+- **Eq**
+- **PartialEq**
+  - ```rust
+    fn eq(self: &Self, other: &ParseError) -> bool { /* ... */ }
+    ```
+
+## Module `testable`
+
+```rust
+pub mod testable { /* ... */ }
+```
+
+### Functions
+
+#### Function `testable_random_sample`
+
+**Attributes:**
+
+- `#[allow(dead_code)]`
+
+Generate a NHS Number testable range random sample.
+The generated number is valid but is never going to be issued.
+
+
+```rust
+pub fn testable_random_sample() -> crate::NHSNumber { /* ... */ }
+```
+
+### Constants and Statics
+
+#### Static `TESTABLE_MIN`
+
+**Attributes:**
+
+- `#[allow(dead_code)]`
+
+Get the NHS Number testable range minimum value.
+This number is valid but is never going to be issued.
+
+
+```rust
+pub static TESTABLE_MIN: std::sync::LazyLock<crate::NHSNumber> = _;
+```
+
+#### Static `TESTABLE_MAX`
+
+**Attributes:**
+
+- `#[allow(dead_code)]`
+
+Get the NHS Number testable range maximum value.
+This number is valid but is never going to be issued.
+
+
+```rust
+pub static TESTABLE_MAX: std::sync::LazyLock<crate::NHSNumber> = _;
+```
+
+#### Static `TESTABLE_RANGE_INCLUSIVE`
+
+**Attributes:**
+
+- `#[allow(dead_code)]`
+
+Get the NHS Number testable range.
+These number is valid but is never going to be issued.
+
+
+```rust
+pub static TESTABLE_RANGE_INCLUSIVE: std::sync::LazyLock<std::ops::RangeInclusive<crate::NHSNumber>> = _;
+```
+
+## Types
+
+### Struct `NHSNumber`
+
+NHS Number is a unique identifier for patients in the National Health
+Service of England, Wales, and the Isle of Man.
+
+Reference:
+
+* [National Health Service (NHS)](https://en.wikipedia.org/wiki/National_Health_Service)
+
+* [NHS Number](https://en.wikipedia.org/wiki/NHS_number)
+
+
+```rust
+pub struct NHSNumber {
+    pub digits: [i8; 10],
+}
+```
+
+#### Fields
+
+| Name | Type | Documentation |
+|------|------|---------------|
+| `digits` | `[i8; 10]` |  |
+
+#### Implementations
+
+##### Methods
+
+- ```rust
+  pub fn new(digits: [i8; 10]) -> Self { /* ... */ }
+  ```
+  Create a new NHS Number instance with the provided digits.
+
+- ```rust
+  pub fn check_digit(self: &Self) -> i8 { /* ... */ }
+  ```
+
+- ```rust
+  pub fn calculate_check_digit(self: &Self) -> i8 { /* ... */ }
+  ```
+
+- ```rust
+  pub fn validate_check_digit(self: &Self) -> bool { /* ... */ }
+  ```
+  Validate the NHS Number check digit equals the calculated check digit.
+
+- ```rust
+  pub fn testable_random_sample() -> NHSNumber { /* ... */ }
+  ```
+  Validate the NHS Number check digit equals the calculated check digit.
+
+##### Trait Implementations
+
+- **VZip**
+  - ```rust
+    fn vzip(self: Self) -> V { /* ... */ }
+    ```
+
+- **Freeze**
+- **ToOwned**
+  - ```rust
+    fn to_owned(self: &Self) -> T { /* ... */ }
+    ```
+
+  - ```rust
+    fn clone_into(self: &Self, target: &mut T) { /* ... */ }
+    ```
+
+- **PartialOrd**
+  - ```rust
+    fn partial_cmp(self: &Self, other: &NHSNumber) -> $crate::option::Option<$crate::cmp::Ordering> { /* ... */ }
+    ```
+
+- **Debug**
+  - ```rust
+    fn fmt(self: &Self, f: &mut $crate::fmt::Formatter<''_>) -> $crate::fmt::Result { /* ... */ }
+    ```
+
+- **TryInto**
+  - ```rust
+    fn try_into(self: Self) -> Result<U, <U as TryFrom<T>>::Error> { /* ... */ }
+    ```
+
+- **Eq**
+- **Send**
+- **BorrowMut**
+  - ```rust
+    fn borrow_mut(self: &mut Self) -> &mut T { /* ... */ }
+    ```
+
+- **Into**
+  - ```rust
+    fn into(self: Self) -> U { /* ... */ }
+    ```
+    Calls `U::from(self)`.
+
+  - ```rust
+    fn into(self: Self) -> String { /* ... */ }
+    ```
+
+- **Clone**
+  - ```rust
+    fn clone(self: &Self) -> NHSNumber { /* ... */ }
+    ```
+
+- **Ord**
+  - ```rust
+    fn cmp(self: &Self, other: &NHSNumber) -> $crate::cmp::Ordering { /* ... */ }
+    ```
+
+- **Serialize**
+  - ```rust
+    fn serialize<__S>(self: &Self, __serializer: __S) -> _serde::__private::Result<<__S as >::Ok, <__S as >::Error>
+where
+    __S: _serde::Serializer { /* ... */ }
+    ```
+
+- **Borrow**
+  - ```rust
+    fn borrow(self: &Self) -> &T { /* ... */ }
+    ```
+
+- **Deserialize**
+  - ```rust
+    fn deserialize<__D>(__deserializer: __D) -> _serde::__private::Result<Self, <__D as >::Error>
+where
+    __D: _serde::Deserializer<''de> { /* ... */ }
+    ```
+
+- **RefUnwindSafe**
+- **CloneToUninit**
+  - ```rust
+    unsafe fn clone_to_uninit(self: &Self, dest: *mut u8) { /* ... */ }
+    ```
+
+- **Sync**
+- **PartialEq**
+  - ```rust
+    fn eq(self: &Self, other: &NHSNumber) -> bool { /* ... */ }
+    ```
+
+- **FromStr**
+  - ```rust
+    fn from_str(s: &str) -> Result<Self, <Self as >::Err> { /* ... */ }
+    ```
+
+- **Unpin**
+- **ToString**
+  - ```rust
+    fn to_string(self: &Self) -> String { /* ... */ }
+    ```
+
+- **Copy**
+- **From**
+  - ```rust
+    fn from(t: T) -> T { /* ... */ }
+    ```
+    Returns the argument unchanged.
+
+- **UnwindSafe**
+- **StructuralPartialEq**
+- **Display**
+  - ```rust
+    fn fmt(self: &Self, f: &mut fmt::Formatter<''_>) -> fmt::Result { /* ... */ }
+    ```
+
+- **DeserializeOwned**
+- **Any**
+  - ```rust
+    fn type_id(self: &Self) -> TypeId { /* ... */ }
+    ```
+
+- **TryFrom**
+  - ```rust
+    fn try_from(value: U) -> Result<T, <T as TryFrom<U>>::Error> { /* ... */ }
+    ```
+
+## Functions
+
+### Function `format`
+
+**Attributes:**
+
+- `#[allow(dead_code)]`
+
+Format the NHS Number is a 10-digit number with spaces:
+
+* 3 digits
+* space
+* 3 digits
+* space
+* 4 digits
+
+
+```rust
+pub fn format(digits: [i8; 10]) -> String { /* ... */ }
+```
+
+### Function `check_digit`
+
+**Attributes:**
+
+- `#[allow(dead_code)]`
+
+Get the NHS Number check digit i.e. the last digit.
+
+```rust
+pub fn check_digit(digits: [i8; 10]) -> i8 { /* ... */ }
+```
+
+## Re-exports
+
+### Re-export `testable::*`
+
+```rust
+pub use testable::*;
+```
+

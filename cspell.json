@@ -4,6 +4,7 @@
     "dictionaryDefinitions": [],
     "dictionaries": [],
     "words": [
+        "rustdoc-llms",
         "serde"
     ],
     "ignoreWords": [],
