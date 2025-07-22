@@ -1,5 +1,5 @@
 cff-version: 1.2.0
-title: Selenium examples using JavaScript
+title: NHS Number Rust crate
 message: >-
   If you use this work and you want to cite it,
   then you can use the metadata from this file.
@@ -12,9 +12,9 @@ authors:
     orcid: 'https://orcid.org/0009-0000-4681-282X'
 identifiers:
   - type: url
-    value: 'https://github.com/gig-cymru-nhs-wales/selenium-examples-using-javascript/'
-    description: Selenium examples using JavaScript
-repository-code: 'https://github.com/gig-cymru-nhs-wales/selenium-examples-using-javascript/'
+    value: 'https://github.com/gig-cymru-nhs-wales/nhs-number/'
+    description: NHS Number Rust crate
+repository-code: 'https://github.com/gig-cymru-nhs-wales/nhs-number/'
 abstract: >-
-  Selenium examples using JavaScript
+  NHS Number Rust crate
 license: See license file
